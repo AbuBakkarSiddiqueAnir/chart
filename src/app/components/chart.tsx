@@ -34,7 +34,7 @@ interface ImagePoint {
   height: number;
 }
 
-const CustomChart: FC = () => {
+const Chart: FC = () => {
   const data: ChartData<"line"> = {
     labels: Array.from({ length: 31 }, (_, i) => 50 + i),
     datasets: [
@@ -178,4 +178,4 @@ const CustomChart: FC = () => {
   return <Line data={data} options={options} plugins={[customPlugin]} />;
 };
 
-export default CustomChart;
+export default Chart;
