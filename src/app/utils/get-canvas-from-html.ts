@@ -1,13 +1,19 @@
+"use client";
 import html2canvas from "html2canvas";
 
-export async function createCardCanvas(age, liquidAssets, netWorth, message) {
+export async function createCardCanvas(
+  age = "",
+  liquidAssets = "",
+  netWorth = "",
+  message = ""
+) {
   // Ensure the html2canvas library is loaded
   if (typeof html2canvas === "undefined") {
     throw new Error("html2canvas library is not loaded");
   }
-
+  if (!document) return;
   // Create a container for the HTML content
-  const container = document.createElement("div");
+  const container = document?.createElement("div");
   container.style.position = "absolute";
   container.style.top = "-9999px"; // Move it off-screen
   container.style.width = "280px";
@@ -37,7 +43,7 @@ export async function createCardCanvas(age, liquidAssets, netWorth, message) {
   `;
 
   container.innerHTML = cardHtml;
-  document.body.appendChild(container);
+  if (document) document?.body.appendChild(container);
 
   let renderedCanvas;
   try {
@@ -48,8 +54,7 @@ export async function createCardCanvas(age, liquidAssets, netWorth, message) {
   } catch (e) {
     console.log(e, "error");
   }
-
-  document.body.removeChild(container);
+  if (document) document?.body.removeChild(container);
   console.log(renderedCanvas);
 
   return renderedCanvas;

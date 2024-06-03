@@ -1,4 +1,6 @@
+"use client";
 export function createCanvasWithTextAndImage(text: string, imageUrl: string) {
+  if (!document) return;
   const canvas = document.createElement("canvas");
   const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
 

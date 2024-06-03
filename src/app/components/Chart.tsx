@@ -172,13 +172,13 @@ export default function Chart() {
   useEffect(() => {
     async function updateAnnotations() {
       const canvas2 = await createCardCanvas(
-        63,
+        "63",
         "$100,000",
         "$500,000",
         "You will be pulling money from retirement funds and pay 20% penalty."
       );
       const canvas1 = await createCardCanvas(
-        75,
+        "75",
         "$100,000",
         "$500,000",
         "You will be pulling money from retirement funds and pay 20% penalty."
