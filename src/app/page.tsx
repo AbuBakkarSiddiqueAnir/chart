@@ -1,9 +1,8 @@
-import Image from "next/image";
-import Chart from "./components/chart";
+import Chart from "./components/Chart";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen min-w-full">
       <Chart />
     </main>
   );
