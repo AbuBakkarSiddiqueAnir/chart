@@ -1,6 +1,13 @@
 "use client";
 import { FC } from "react";
 import { Line } from "react-chartjs-2";
+import annotationPlugin from "chartjs-plugin-annotation";
+import {
+  getImage,
+  createCanvasWithTextAndImage,
+  createCardCanvas,
+} from "./getImage";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,7 +19,6 @@ import {
   Legend,
   Filler,
   ChartData,
-  Plugin,
 } from "chart.js";
 
 ChartJS.register(
@@ -23,7 +29,8 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
+  annotationPlugin
 );
 
 interface ImagePoint {
@@ -36,22 +43,97 @@ interface ImagePoint {
 
 const Chart: FC = () => {
   const data: ChartData<"line"> = {
-    labels: Array.from({ length: 31 }, (_, i) => 50 + i),
+    labels: [0, 45, 50, 55, 60, 65, 70, 75, 80],
     datasets: [
       {
         label: "Net Worth",
-        data: [
-          0, 9, 17, 26, 35, 48, 60, 75, 90, 105, 120, 135, 155, 160, 162, 164,
-          166, 168, 170, 172, 172, 171, 170, 169, 168, 167, 166,
-        ],
+        data: [40, 60, 80, 100, 120, 140, 135, 130, 120, 200, 300],
         fill: true,
-        backgroundColor: "rgba(192,75,192,0.2)",
-        borderColor: "rgba(192,75,192,1)",
-        tension: 0.5,
+        backgroundColor: "#C2C9FB",
+        borderColor: "#657AED",
+        tension: 0.7,
       },
     ],
   };
 
+  const annotation1 = {
+    type: "label",
+    drawTime: "afterDraw",
+    content: createCanvasWithTextAndImage(
+      " CHILD 1 \n COLLEGE",
+      "/chart-img-1.png"
+    ),
+    xValue: 3,
+    yValue: 160,
+  };
+
+  const annotation2 = {
+    type: "label",
+    drawTime: "afterDraw",
+    content: createCanvasWithTextAndImage(
+      " CHILD 2 \n COLLEGE",
+      "/chart-img-1.png"
+    ),
+    xValue: 4,
+    yValue: 190,
+  };
+
+  const annotation4 = {
+    type: "label",
+    drawTime: "afterDraw",
+    content: createCanvasWithTextAndImage("", "/chart-img-2.png"),
+    xValue: 3.4,
+    yValue: 100,
+  };
+  const annotation5 = {
+    type: "label",
+    drawTime: "afterDraw",
+    content: createCanvasWithTextAndImage(
+      "EARLIEST AGE OF \n RETIREMENT",
+      "/chart-img-3.png"
+    ),
+    xValue: 5.4,
+    yValue: 140,
+  };
+
+  const annotation3 = {
+    type: "box",
+    shadowBlur: "10px",
+    label: {
+      content: [
+        "Liquid Assets: $3.45M",
+        "Liquid Assets: $3.45M",
+        "Liquid Assets: $3.45M",
+      ],
+      display: true,
+    },
+    xMin: 3.5,
+    xMax: 5.0,
+    yMin: 45,
+    yMax: 125,
+    borderRadius: 20,
+    borderColor: "red",
+    backgroundColor: "#fff",
+  };
+  const annotation6 = {
+    type: "box",
+    shadowBlur: "10px",
+    borderColor: "#0C8CE9",
+    label: {
+      content: [
+        "Liquid Assets: $3.45M",
+        "Liquid Assets: $3.45M",
+        "Liquid Assets: $3.45M",
+      ],
+      display: true,
+    },
+    xMin: 6,
+    xMax: 7.5,
+    yMin: 145,
+    yMax: 215,
+    borderRadius: 20,
+    backgroundColor: "#fff",
+  };
   const options: any = {
     responsive: true,
     plugins: {
@@ -62,120 +144,25 @@ const Chart: FC = () => {
         display: true,
         text: "Net Worth Over Time",
       },
-      tooltip: {
-        callbacks: {
-          label: function (context: any) {
-            let label = context.dataset.label || "";
-            if (label) {
-              label += ": ";
-            }
-            if (context.parsed.y !== null) {
-              label += new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-              }).format(context.parsed.y);
-            }
-            return label;
-          },
+      annotation: {
+        annotations: {
+          annotation1,
+          annotation2,
+          annotation3,
+          annotation4,
+          annotation5,
+          annotation6,
         },
-      },
-      imagePoints: {
-        images: [
-          {
-            src: "/home.png",
-            x: 5,
-            y: 140,
-            width: 60,
-            height: 60,
-          },
-          {
-            src: "/dollar-bag.png",
-            x: 6,
-            y: 110,
-            width: 60,
-            height: 60,
-          },
-          {
-            src: "/home.png",
-            x: 9,
-            y: 150,
-            width: 60,
-            height: 60,
-          },
-          {
-            src: "/dollar-bag.png",
-            x: 14,
-            y: 130,
-            width: 60,
-            height: 60,
-          },
-          {
-            src: "/home.png",
-            x: 25,
-            y: 140,
-            width: 60,
-            height: 60,
-          },
-        ],
       },
     },
     scales: {
-      x: {
-        title: {
-          display: true,
-          text: "Age",
-        },
-        grid: {
-          display: false,
-        },
-      },
       y: {
-        title: {
-          display: true,
-          text: "Net Worth (in millions)",
-        },
-        grid: {
-          display: false,
-        },
+        stacked: true,
       },
     },
   };
 
-  const customPlugin: Plugin<"line"> = {
-    id: "imagePoints",
-    afterDraw: (chart) => {
-      const ctx = chart.ctx;
-      const { images } = (chart.options.plugins as any).imagePoints;
-
-      images.forEach((imagePoint: ImagePoint) => {
-        const img = new Image();
-        img.src = imagePoint.src;
-        img.onload = () => {
-          const xPosition = chart.scales.x.getPixelForValue(imagePoint.x);
-          const yPosition = chart.scales.y.getPixelForValue(imagePoint.y);
-          const yAxisBottom = chart.scales.y.getPixelForValue(
-            chart.scales.y.min
-          );
-
-          ctx.drawImage(
-            img,
-            xPosition - imagePoint.width / 2,
-            yPosition - imagePoint.height / 2,
-            imagePoint.width,
-            imagePoint.height
-          );
-
-          ctx.beginPath();
-          ctx.moveTo(xPosition, yPosition);
-          ctx.lineTo(xPosition, yAxisBottom);
-          ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
-          ctx.stroke();
-        };
-      });
-    },
-  };
-
-  return <Line data={data} options={options} plugins={[customPlugin]} />;
+  return <Line data={data} options={options} />;
 };
 
 export default Chart;
