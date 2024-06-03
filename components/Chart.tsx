@@ -1,4 +1,9 @@
 "use client";
+import { useEffect } from "react";
+
+import { createCanvasWithTextAndImage } from "../src/app/utils/create-canvas-with-text-and-image";
+import { createCardCanvas } from "../src/app/utils/get-canvas-from-html";
+
 import { Line } from "react-chartjs-2";
 import annotationPlugin from "chartjs-plugin-annotation";
 
@@ -13,9 +18,6 @@ import {
   Legend,
   Filler,
 } from "chart.js";
-import { createCanvasWithTextAndImage } from "../utils/create-canvas-with-text-and-image";
-import { createCardCanvas } from "../utils/get-canvas-from-html";
-import { useEffect } from "react";
 
 ChartJs.register(
   annotationPlugin,
